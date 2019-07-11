@@ -12,9 +12,9 @@ client.on('message', msg => {
     const ARGS = msg.content.split(" ");
     if (ARGS[0] === "/gif") {
         msg.channel.send("doing request with: " + ARGS[1])
-        let url = "http://api.giphy.com/v1/gifs/random?tag=" + ARGS[1] + "&api_key=" + credentials.credentials.api_key;
+        let url = "http://api.giphy.com/v1/gifs/translate?s=" + ARGS[1] + "&api_key=" + credentials.credentials.api_key + "&weirdness=10";
         axios.get(url).then(response => {
-            msg.channel.send("Gif:", { file: response.data.data.images.preview_gif.url });
+            msg.channel.send("Gif:", { file: response.data.data.images.fixed_height_downsampled.url });
         }).catch(error => {
             msg.channel.send(error)
         })
