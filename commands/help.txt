@@ -1,0 +1,3 @@
+Commands:
+Type /gif XXX - to get XXX gif.
+Type /gif-help - to see help menu.
