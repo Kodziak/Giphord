@@ -1,29 +1,24 @@
 const Discord = require('discord.js');
 const axios = require('axios')
 const client = new Discord.Client();
-const credentials = require('./credentials');
+const { token, api_key } = require('./credentials');
+const utils = require('./utils');
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
 client.on('message', msg => {
-    const ARGS = msg.content.split(" ");
-    let firstWord = [];
-    let restWords = [];
-    for(let i = 0; i < ARGS.length; i++) {
-        if(i === 0) {
-            firstWord.push(ARGS[0])
-        } else {
-            restWords.push(ARGS[i])
-        }
-    }
-    firstWord = firstWord.join('');
-    restWords = restWords.join(' ');
-    let plusWords = restWords.replace(/ /g, "+");
+    let firstWord = utils.getFirstWord(msg.content);
+    let restWords = utils.getStringExceptFirstWord(msg.content);
+    restWords = utils.replaceSpaceWithPlus(restWords);
 
-    if (firstWord === "/gif" && restWords.length > 0) {
-        let url = "http://api.giphy.com/v1/gifs/translate?s=" + plusWords + "&api_key=" + credentials.credentials.api_key + "&weirdness=10";
+    if (!restWords) {
+        msg.reply("You need to put a word!")
+    }
+
+    if (firstWord === "/gif" && restWords) {
+        let url = "http://api.giphy.com/v1/gifs/translate?s=" + restWords + "&api_key=" + api_key + "&weirdness=10";
         axios.get(url).then(response => {
             msg.channel.send("Gif:", { file: response.data.data.images.fixed_height_downsampled.url });
         }).catch(error => {
@@ -32,4 +27,4 @@ client.on('message', msg => {
     }
 });
 
-client.login(credentials.credentials.token);
+client.login(token);
