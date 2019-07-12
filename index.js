@@ -16,11 +16,11 @@ client.on('message', msg => {
     let restWords = utils.getStringExceptFirstWord(msg.content);
     restWords = utils.replaceSpaceWithPlus(restWords);
 
-    if (!restWords) {
+    if (prefix === "/gif" && restWords.length == 0) {
         msg.reply("You need to put a word!")
     }
 
-    if (prefix === "/gif" && restWords) {
+    if (prefix === "/gif" && restWords.length > 0) {
         let url = "http://api.giphy.com/v1/gifs/translate?s=" + restWords + "&api_key=" + api_key + "&weirdness=10";
         axios.get(url).then(response => {
             msg.channel.send("Gif:", { file: response.data.data.images.fixed_height_downsampled.url });
